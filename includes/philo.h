@@ -19,16 +19,30 @@
 # include <unistd.h>
 # include <pthread.h>
 # include <sys/time.h>
-# define PHILO 0
-# define TTODIE 1
-# define TTOEAT 2
-# define TTOSLEEP 3
-# define TMUSTEAT 4
+// # define PHILO 0
+// # define TTODIE 1
+// # define TTOEAT 2
+// # define TTOSLEEP 3
+// # define TMUSTEAT 4
 
 typedef struct s_data
 {
-    int args[5];
+    int nbphilo;
+    int die;
+    int eat;
+    int sleep;
+    int meat;
+
 }				t_data;
+
+typedef struct s_philo
+{
+    unsigned int philo_id;
+    pthread_t philosophe;
+    pthread_mutex_t mutex_fork;
+    pthread_mutex_t *mutex_fork2;
+    t_data  *data;
+}               t_philo;
 
 int         ft_atoi(char *str);
 long int	ft_atol(char *str);

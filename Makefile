@@ -30,8 +30,8 @@ SRC = philo.c Basics.c
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:%.c=%.o))
 
 ##Basics flags
-CFLAGS =	-Wall -Wextra -Werror
-# -g3 -fsanitize=address
+CFLAGS =	-Wall -Wextra -Werror -g3 
+#-fsanitize=address
 
 ##Create the flags to includes every .h needed by this program
 IFLAGS =	$(foreach dir, $(INC_DIR), -I $(dir))
@@ -43,7 +43,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 				@echo "Compiling $(NAME) ...\c"
-				$(CC) $(OBJ) $(CFLAGS) $(IFLAGS) -o philo
+				$(CC) $(OBJ) $(CFLAGS) $(IFLAGS) -lpthread -D_REENTRANT -DLinux -o philo
 				@echo " DONE"
 
 $(OBJ_DIR)/%.o : %.c

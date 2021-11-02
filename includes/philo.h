@@ -25,25 +25,28 @@
 // # define TTOSLEEP 3
 // # define TMUSTEAT 4
 
-typedef struct s_data
-{
-    int nbphilo;
-    int die;
-    int eat;
-    int sleep;
-    int meat;
+typedef struct timeval  t_timeval;
 
+typedef struct  s_data
+{
+    int         nbphilo;
+    int         die;
+    int         eat;
+    int         sleep;
+    int         meat;
+    long long   stime;
+    int         dead;
 }				t_data;
 
-typedef struct s_philo
+typedef struct  s_philo
 {
-    unsigned int philo_id;
-    pthread_t philosophe;
+    unsigned int    philo_id;
+    pthread_t       philosophe;
     pthread_mutex_t mutex_fork;
     pthread_mutex_t *mutex_fork2;
-    t_data  *data;
+    t_data          *data;
 }               t_philo;
 
 int         ft_atoi(char *str);
-long int	ft_atol(char *str);
+long int    ft_atol(char *str);
 #endif

@@ -45,6 +45,7 @@ typedef void *(*t_routine)(void *);
 void    *Routine(t_philo *philo)
 {
     int i;
+    long long int isdead;
 
     i = 0;
     while (i < philo->data->meat && philo->data->dead == 0)
@@ -71,7 +72,11 @@ void    *Routine(t_philo *philo)
           pthread_mutex_lock(philo->mutex_fork2);
           printf("%lld %d has taken a fork\n", (ft_time() - philo->data->stime), philo->philo_id);
       }
-      printf("%lld %d is eating\n", (ft_time() - philo->data->stime), philo->philo_id);
+      if (i == 0)
+        data.feat = (ft_time() - philo->data->stime);
+      else
+        data.seat = (ft_time() - philo->data->stime);
+      printf("%lld %d is eating\n", isdead, philo->philo_id);
       usleep(philo->data->eat * 1000);
       pthread_mutex_unlock(philo->mutex_fork2);
           // return (0); // fct prtege et destroy mutex
@@ -80,6 +85,7 @@ void    *Routine(t_philo *philo)
       usleep(philo->data->sleep * 1000);
       i++;
     }
+    philo->data->EOeat += 1;
     return (philo);
 }
 
@@ -95,6 +101,9 @@ int main(int argc, char **argv)
     if (check_arg(argv, (int*)&data) == NULL)
         return (-1);
     data.dead = 0;
+    data.EOeat = 0;
+    data.feat = 0;
+    data.seat = 0;
     philo = malloc(data.nbphilo * sizeof (*philo));
     if (philo == NULL)
         return (0);
@@ -122,5 +131,15 @@ int main(int argc, char **argv)
         pthread_join(philo[i].philosophe, NULL);
         i++;
     }
+    while (data.dead != 0 || data.EOeat == data.nbphilo)
+    {
+        i = 0;
+
+        if (data.seat == 0)
+        {
+            usleep(data.die * 1000);
+        }
+    }
+    // boucle inf qui check la vie philo[i] des philo si mort set dead a 1 et break ou si manger assez break;
     return (0);
 }

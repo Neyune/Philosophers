@@ -35,7 +35,9 @@ typedef struct  s_data
     int         sleep;
     int         meat;
     long long   stime;
-    int         dead;
+    int         feat;
+    int         seat;
+    int         EOeat;
 }				t_data;
 
 typedef struct  s_philo

@@ -6,7 +6,7 @@
 /*   By: ereali <ereali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 05:32:46 by ereali            #+#    #+#             */
-/*   Updated: 2021/11/10 01:48:57 by ereali           ###   ########.fr       */
+/*   Updated: 2021/11/11 21:04:18 by ereali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,17 @@ long long ft_time(void)
 	return (time);
 }
 
+void ft_msleep(long long msec)
+{
+
+	long long timestamp;
+
+
+	timestamp = ft_time();
+	while(ft_time() - timestamp < msec)
+		usleep(150);
+}
+
 typedef void *(*t_routine)(void *);
 
 void    *Routine(t_philo *philo)
@@ -53,6 +64,8 @@ void    *Routine(t_philo *philo)
 	i = 0;
 	while ((philo->data->meat == -1 && philo->data->dead == 0) || (i < philo->data->meat && philo->data->dead == 0))
 	{
+		if (philo->data->dead == 0 && !(philo->data->nbphilo == 1 && i >= 1))
+			printf("%lld %d is thinking\n", (ft_time() - philo->data->stime), philo->philo_id);
 		if ((philo->philo_id % 2 == 1 && philo->data->dead == 0) && !(philo->data->nbphilo == 1 && i >= 1))
 		{
 			f1 = 1;
@@ -69,29 +82,23 @@ void    *Routine(t_philo *philo)
 				printf("%lld %d has taken a fork\n", (ft_time() - philo->data->stime), philo->philo_id);
 			// return (0); // fct prtege et destroy mutex
 		}
-		// if (philo->data->dead == 0 && (f1 == 1 || f2 == 1))
-			// printf("%lld %d has taken a fork\n", (ft_time() - philo->data->stime), philo->philo_id);
 		if (philo->philo_id % 2 == 1 && philo->data->dead == 0 && philo->data->nbphilo > 1)
 		{
 			f2 = 1;
 			pthread_mutex_lock(&philo->mutex_fork);
-			// printf("%lld %d has taken a fork\n", (ft_time() - philo->data->stime), philo->philo_id);
 		}
 		if (philo->philo_id % 2 == 0 && philo->data->dead == 0)
 		{
 			f1 = 1;
 			pthread_mutex_lock(philo->mutex_fork2);
 		}
-		// if (i == 0)
 		if (f1 && f2)
 			philo->feat = (ft_time() - philo->data->stime);
-		// printf("%lld\n",(philo[i].feat));
-
 		if (philo->data->dead == 0 && f1 && f2)
 		{
 			printf("%lld %d has taken a fork\n", (ft_time() - philo->data->stime), philo->philo_id);
 			printf("%lld %d is eating\n", (ft_time() - philo->data->stime), philo->philo_id);
-			usleep(philo->data->eat * 1000);
+			ft_msleep(philo->data->eat);
 		}  // return (0); // fct prtege et destroy mutex
 		if ((f1 && philo->data->nbphilo != 1) || (f1 && philo->data->dead))
 			pthread_mutex_unlock(philo->mutex_fork2);
@@ -100,11 +107,12 @@ void    *Routine(t_philo *philo)
 		if (philo->data->dead == 0 && (f1 && f2))
 		{
 			printf("%lld %d is sleeping\n", (ft_time() - philo->data->stime), philo->philo_id);
-			usleep(philo->data->sleep * 1000);
+			ft_msleep(philo->data->sleep);
 		}
-		if (philo->data->dead == 0 && (f1 && f2))
-			printf("%lld %d is thinking\n", (ft_time() - philo->data->stime), philo->philo_id);
 		i++;
+	}
+	while (philo->data->dead == 0 && (philo->data->nbphilo == 1 && i >= 1))
+	{
 	}
 	philo->data->EOeat += 1;
 	return (philo);
@@ -118,7 +126,7 @@ int main(int argc, char **argv)
 
 	i = 0;
 	if (argc != 5 && argc != 6)
-	return (0);
+		return (0);
 	if (check_arg(argv, (int*)&data) == NULL)
 	{
 		if (data.meat == 0)
@@ -156,14 +164,16 @@ int main(int argc, char **argv)
 		i = 0;
 		while (i < data.nbphilo && data.dead == 0 && data.EOeat != data.nbphilo)
 		{
-			// printf("%lld\n",(philo[i].feat));
 			if ((ft_time() - philo->data->stime) - philo[i].feat >= data.die)
 			{
 				data.dead = 1;
 				printf("%lld %d died\n", (ft_time() - philo->data->stime), i + 1);
 			}
+			usleep(150);
 			i++;
 		}
+		// printf("dead %d , EOeat %d , nbphilo %d , meat %d", data.dead, data.EOeat ,data.nbphilo, data.meat);
+
 	}
 	i = 0;
 	while (i < data.nbphilo)

@@ -6,7 +6,7 @@
 /*   By: ereali <ereali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 05:32:46 by ereali            #+#    #+#             */
-/*   Updated: 2021/11/11 21:04:18 by ereali           ###   ########.fr       */
+/*   Updated: 2021/11/12 03:09:40 by ereali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ long long ft_time(void)
 	return (time);
 }
 
-void ft_msleep(long long msec)
+void ft_msleep(t_data **data,long long msec)
 {
 
 	long long timestamp;
 
 
 	timestamp = ft_time();
-	while(ft_time() - timestamp < msec)
+	while((*data)->dead == 0 && ft_time() - timestamp < msec)
 		usleep(150);
 }
 
@@ -58,11 +58,13 @@ void    *Routine(t_philo *philo)
 	int i;
 	int f1;
 	int f2;
+	int eatenough;
 
 	f1 = 0;
 	f2 = 0;
 	i = 0;
-	while ((philo->data->meat == -1 && philo->data->dead == 0) || (i < philo->data->meat && philo->data->dead == 0))
+	eatenough = 0;
+	while (philo->data->dead == 0 && philo->data->meat != 0 && philo->data->EOeat != philo->data->nbphilo)
 	{
 		if (philo->data->dead == 0 && !(philo->data->nbphilo == 1 && i >= 1))
 			printf("%lld %d is thinking\n", (ft_time() - philo->data->stime), philo->philo_id);
@@ -98,7 +100,7 @@ void    *Routine(t_philo *philo)
 		{
 			printf("%lld %d has taken a fork\n", (ft_time() - philo->data->stime), philo->philo_id);
 			printf("%lld %d is eating\n", (ft_time() - philo->data->stime), philo->philo_id);
-			ft_msleep(philo->data->eat);
+			ft_msleep(&philo->data, philo->data->eat);
 		}  // return (0); // fct prtege et destroy mutex
 		if ((f1 && philo->data->nbphilo != 1) || (f1 && philo->data->dead))
 			pthread_mutex_unlock(philo->mutex_fork2);
@@ -107,14 +109,19 @@ void    *Routine(t_philo *philo)
 		if (philo->data->dead == 0 && (f1 && f2))
 		{
 			printf("%lld %d is sleeping\n", (ft_time() - philo->data->stime), philo->philo_id);
-			ft_msleep(philo->data->sleep);
+			ft_msleep(&philo->data,philo->data->sleep);
 		}
 		i++;
+		if (philo->data->meat > 0 && i >= philo->data->meat && eatenough == 0)
+		{
+			eatenough = 1;
+			philo->data->EOeat += 1;
+		}
 	}
 	while (philo->data->dead == 0 && (philo->data->nbphilo == 1 && i >= 1))
 	{
+		usleep(150);
 	}
-	philo->data->EOeat += 1;
 	return (philo);
 }
 

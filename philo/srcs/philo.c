@@ -12,15 +12,15 @@
 
 #include "philo.h"
 
-void init_philo(t_data *data)
+t_philo *init_philo(t_data *data)
 {
 	int i;
-	t_philo philo;
+	t_philo *philo;
 
 	i = 0;
 	data->dead = 0;
 	data->EOeat = 0;
-	philo = malloc(data.nbphilo * sizeof (*philo));
+	philo = malloc(data->nbphilo * sizeof (*philo));
 	if (philo == NULL)
 	return (0);
 	while (i < data->nbphilo)
@@ -33,10 +33,11 @@ void init_philo(t_data *data)
 		philo[i].mutex_fork2 = &philo[i + 1].mutex_fork;
 		else
 		philo[i].mutex_fork2 = &philo[0].mutex_fork;
-		philo[i].data = &data;
+		philo[i].data = data;
 		i++;
 	}
 	data->stime = ft_time();
+	return(philo);
 }
 
 int *check_arg(char **argv, int *args)
@@ -48,40 +49,19 @@ int *check_arg(char **argv, int *args)
 	{
 		args[i] = ft_atoi(argv[i + 1]);
 		if (args[i] == -1 || args[i] != ft_atol(argv[i + 1]))
-		return (NULL);
+			return (NULL);
 		i++;
 	}
 	if (argv[5] == NULL)
-	args[4] = -1;
+		args[4] = -1;
 	return (args);
-}
-
-long long ft_time(void)
-{
-	t_timeval now;
-	unsigned long time;
-
-	if (gettimeofday(&now, NULL) != 0)
-	write(1, "ERROR\n", 6);
-	time = ((now.tv_sec * 1000) + (now.tv_usec / 1000));
-	return (time);
-}
-
-void ft_msleep(t_data **data,long long msec)
-{
-
-	long long timestamp;
-
-
-	timestamp = ft_time();
-	while((*data)->dead == 0 && ft_time() - timestamp < msec)
-		usleep(150);
 }
 
 typedef void *(*t_routine)(void *);
 
 void    *Routine(t_philo *philo)
 {
+	// tableau int pour avoir que f[2]
 	int i;
 	int f1;
 	int f2;
@@ -163,18 +143,20 @@ int main(int argc, char **argv)
 		return (0);
 	if (check_arg(argv, (int*)&data) == NULL)
 	{
-		if (data.meat == 0)
-		return (0);
 		printf("Wrong args you need to put 4 or 5 ags only unsigned int\n");
 		return (-1);
 	}
-
+	if (data.meat == 0)
+		return (0);
+	philo = init_philo(&data);
 	i = 0;
+	// creer mutex synch
 	while (i < data.nbphilo)
 	{
 		pthread_create(&philo[i].philosophe, NULL, (t_routine)Routine, &philo[i]);
 		i++;
 	}
+	// unlock mutex synch (test rapiditer d'un pthread create face a lock unlock) faire un usleep avant et apres
 	while (data.dead == 0 && data.EOeat != data.nbphilo && data.meat != 0)
 	{
 		i = 0;
@@ -188,14 +170,10 @@ int main(int argc, char **argv)
 			usleep(150);
 			i++;
 		}
-		// printf("dead %d , EOeat %d , nbphilo %d , meat %d", data.dead, data.EOeat ,data.nbphilo, data.meat);
-
 	}
 	i = 0;
-	while (i < data.nbphilo)
-	{
-		pthread_join(philo[i].philosophe, NULL);
+	while (i < data.nbphilo && pthread_join(philo[i].philosophe, NULL) == 0)
 		i++;
-	}
+	free(philo);
 	return (0);
 }

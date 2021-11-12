@@ -23,14 +23,20 @@ OBJ_DIR	= obj
 ##Add to the vpath the folder find in SRC_DIR
 vpath %.c $(foreach dir, $(SRC_DIR), $(dir):)
 
+##Add to the vpath the folder find in SRC_DIR
+vpath %.h $(foreach dir, $(INC_DIR), $(dir):)
+
 ##List every .c found inside SRC_DIR
 SRC = philo.c Basics.c
+
+##List every .h found inside INC_DIR
+INC = philo.h
 
 ##Transform and place every .o from SRC
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:%.c=%.o))
 
 ##Basics flags
-CFLAGS =	-Wall -Wextra -Werror -g3 
+CFLAGS =	-Wall -Wextra -Werror -g3
 #-fsanitize=address
 
 ##Create the flags to includes every .h needed by this program
@@ -41,7 +47,7 @@ CC =	gcc
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
+$(NAME): $(INC) $(OBJ)
 				@echo "Compiling $(NAME) ...\c"
 				$(CC) $(OBJ) $(CFLAGS) $(IFLAGS) -lpthread -D_REENTRANT -DLinux -o philo
 				@echo " DONE"

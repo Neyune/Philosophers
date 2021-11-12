@@ -43,10 +43,11 @@ typedef struct  s_philo
     pthread_mutex_t	mutex_fork;
     pthread_mutex_t	*mutex_fork2;
     t_data			*data;
-}               t_philo;
-
+}                   t_philo;
 
 int         ft_atoi(char *str);
 long int    ft_atol(char *str);
+long long   ft_time(void);
+void        ft_msleep(t_data **data,long long msec);
 void		*Routine(t_philo *philo);
 #endif

@@ -6,11 +6,38 @@
 /*   By: ereali <ereali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 05:32:46 by ereali            #+#    #+#             */
-/*   Updated: 2021/11/12 03:09:40 by ereali           ###   ########.fr       */
+/*   Updated: 2021/11/12 03:17:52 by ereali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void init_philo(t_data *data)
+{
+	int i;
+	t_philo philo;
+
+	i = 0;
+	data->dead = 0;
+	data->EOeat = 0;
+	philo = malloc(data.nbphilo * sizeof (*philo));
+	if (philo == NULL)
+	return (0);
+	while (i < data->nbphilo)
+	{
+		philo[i].philo_id = i + 1;
+		philo[i].feat = 0;
+		philo[i].seat = 0;
+		pthread_mutex_init(&philo[i].mutex_fork, NULL);
+		if (i != data->nbphilo - 1)
+		philo[i].mutex_fork2 = &philo[i + 1].mutex_fork;
+		else
+		philo[i].mutex_fork2 = &philo[0].mutex_fork;
+		philo[i].data = &data;
+		i++;
+	}
+	data->stime = ft_time();
+}
 
 int *check_arg(char **argv, int *args)
 {
@@ -141,26 +168,8 @@ int main(int argc, char **argv)
 		printf("Wrong args you need to put 4 or 5 ags only unsigned int\n");
 		return (-1);
 	}
-	data.dead = 0;
-	data.EOeat = 0;
-	philo = malloc(data.nbphilo * sizeof (*philo));
-	if (philo == NULL)
-	return (0);
-	while (i < data.nbphilo)
-	{
-		philo[i].philo_id = i + 1;
-		philo[i].feat = 0;
-		philo[i].seat = 0;
-		pthread_mutex_init(&philo[i].mutex_fork, NULL);
-		if (i != data.nbphilo - 1)
-		philo[i].mutex_fork2 = &philo[i + 1].mutex_fork;
-		else
-		philo[i].mutex_fork2 = &philo[0].mutex_fork;
-		philo[i].data = &data;
-		i++;
-	}
+
 	i = 0;
-	data.stime = ft_time();
 	while (i < data.nbphilo)
 	{
 		pthread_create(&philo[i].philosophe, NULL, (t_routine)Routine, &philo[i]);

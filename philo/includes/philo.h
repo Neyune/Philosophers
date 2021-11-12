@@ -6,7 +6,7 @@
 /*   By: ereali <ereali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 05:35:05 by ereali            #+#    #+#             */
-/*   Updated: 2021/11/08 21:29:03 by ereali           ###   ########.fr       */
+/*   Updated: 2021/11/12 03:13:15 by ereali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ typedef struct  s_philo
     t_data			*data;
 }               t_philo;
 
+
 int         ft_atoi(char *str);
 long int    ft_atol(char *str);
+void		*Routine(t_philo *philo);
 #endif

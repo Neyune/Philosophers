@@ -70,3 +70,13 @@ void ft_msleep(t_data **data,long long msec)
 		&& ft_time() - timestamp < msec)
 		usleep(150);
 }
+
+void ft_clear(t_philo **philo)
+{
+	pthread_mutex_destroy(&(*philo)->data->m_sync);
+	pthread_mutex_destroy(&(*philo)->data->m_EOeat);
+	pthread_mutex_destroy(&(*philo)->data->m_dead);
+	// while i ...
+	// pthread_mutex_destroy(&(*philo)[i].mutex_fork);
+	free(*philo);
+}

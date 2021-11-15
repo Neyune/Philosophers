@@ -120,11 +120,12 @@ int	philocreate(t_philo **philo)
 	{
 		if (pthread_create(&(*philo)[i].philosophe, NULL, (t_routine)Routine, &(*philo)[i]))
 		{
-			pthread_mutex_destroy(&(*philo)->data->m_dead);
-			pthread_mutex_destroy(&(*philo)->data->m_EOeat);
-			pthread_mutex_destroy(&(*philo)->data->m_dead);
-			pthread_mutex_destroy(&(*philo)[i].mutex_fork);
-			free(*philo);
+			// pthread_mutex_destroy(&(*philo)->data->m_sync);
+			// pthread_mutex_destroy(&(*philo)->data->m_EOeat);
+			// pthread_mutex_destroy(&(*philo)->data->m_dead);
+			// pthread_mutex_destroy(&(*philo)[i].mutex_fork);
+			// free(*philo);
+			ft_clear(philo);
 			return (1);
 		}
 		i++;
@@ -140,12 +141,9 @@ int philojoin(t_philo **philo)
 	while (i < (*philo)->data->nbphilo
 		&& pthread_join((*philo)[i].philosophe, NULL) == 0)
 		i++;
-	if(pthread_mutex_destroy(&(*philo)->data->m_sync))
-		return (-1);
 	if (i == (*philo)->data->nbphilo)
 	 	return (0);
-	else
-		return (-1);
+	return (-1);
 }
 
 int main(int argc, char **argv)
@@ -168,13 +166,44 @@ int main(int argc, char **argv)
 	pthread_mutex_unlock(&data.m_sync);
 	if (setdeath(&data, &philo) || philojoin(&philo))
 	{
-		free(philo);
+		ft_clear(&philo);
 		return(3);
 	}
-	free(philo);
+	ft_clear(&philo);
 	return (0);
 }
 
+// void *rout(void *nu)
+// {
+// 	(void)nu;
+// 	return (NULL);
+// }
+//
+// int main()
+// {
+// 	pthread_mutex_t m_sync;
+// 	int i = 0;
+//
+// 	while (i < 200) {
+// 	pthread_mutex_init(&m_sync, NULL);
+// 	pthread_mutex_lock(&m_sync);
+// 	pthread_mutex_unlock(&m_sync);
+// 	pthread_mutex_destroy(&m_sync);
+// 	i ++;
+// }
+// 	return (0);
+// }
+
+// pthread_t *philo;
+//
+// int i = 0;
+// philo = malloc(200 * sizeof (*philo));
+//
+// while (i < 200)
+// {
+// 	pthread_create(&philo[i], NULL, (t_routine)rout, 0);
+// 	i++;
+// }
 // fct () 			pthread_mutex_destroy(&(*philo)->data->m_dead);
 // 			pthread_mutex_destroy(&(*philo)->data->m_EOeat);
 // 			pthread_mutex_destroy(&(*philo)->data->m_dead);

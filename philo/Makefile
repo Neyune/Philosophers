@@ -27,7 +27,7 @@ vpath %.c $(foreach dir, $(SRC_DIR), $(dir):)
 vpath %.h $(foreach dir, $(INC_DIR), $(dir):)
 
 ##List every .c found inside SRC_DIR
-SRC = philo.c Basics.c
+SRC = philo.c Basics.c initstruct.c Routine.c
 
 ##List every .h found inside INC_DIR
 INC = philo.h
@@ -36,7 +36,7 @@ INC = philo.h
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:%.c=%.o))
 
 ##Basics flags
-CFLAGS =	-Wall -Wextra -Werror -g3
+CFLAGS =	-Wall -Wextra -Werror -g3 -fsanitize=address
 #-fsanitize=address
 
 ##Create the flags to includes every .h needed by this program

@@ -24,19 +24,22 @@ typedef struct timeval  t_timeval;
 
 typedef struct  s_data
 {
-    int         nbphilo;
-    int         die;
-    int         eat;
-    int         sleep;
-    int         meat;
-    long long   stime;
-    int         EOeat;
-	int			dead;
+    int             nbphilo;
+    int             die;
+    int             eat;
+    int             sleep;
+    int             meat;
+    long long       stime;
+    pthread_mutex_t m_sync;
+    pthread_mutex_t m_EOeat;
+    int             EOeat;
+    pthread_mutex_t m_dead;
+	int			    dead;
 }				t_data;
 
 typedef struct  s_philo
 {
-    unsigned int	philo_id;
+    int         	philo_id;
 	long long int   feat;
 	long long int	seat;
     pthread_t		philosophe;
@@ -49,5 +52,9 @@ int         ft_atoi(char *str);
 long int    ft_atol(char *str);
 long long   ft_time(void);
 void        ft_msleep(t_data **data,long long msec);
+int *check_arg(char **argv, int *args);
+t_data init_data(char **argv);
+t_philo     *init_philo(t_data *data);
+
 void		*Routine(t_philo *philo);
 #endif

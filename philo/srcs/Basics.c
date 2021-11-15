@@ -52,7 +52,10 @@ long long ft_time(void)
 	unsigned long time;
 
 	if (gettimeofday(&now, NULL) != 0)
-	write(1, "ERROR\n", 6);
+	{
+		write(1, "ERROR\n", 6);
+		return (-1);
+	}
 	time = ((now.tv_sec * 1000) + (now.tv_usec / 1000));
 	return (time);
 }
@@ -63,6 +66,7 @@ void ft_msleep(t_data **data,long long msec)
 	long long timestamp;
 
 	timestamp = ft_time();
-	while((*data)->dead == 0 && ft_time() - timestamp < msec)
+	while ((*data)->dead == 0 && (*data)->EOeat != (*data)->nbphilo
+		&& ft_time() - timestamp < msec)
 		usleep(150);
 }

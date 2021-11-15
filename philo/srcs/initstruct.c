@@ -30,12 +30,22 @@ t_data init_data(char **argv)
 	}
 	data.dead = 0;
 	data.EOeat = 0;
-	if (pthread_mutex_init(&data.m_sync, NULL))
-		data.meat = 0;
-	else if (pthread_mutex_init(&data.m_dead, NULL))
-		data.meat = 0;
-	else if (pthread_mutex_init(&data.m_EOeat, NULL))
-		data.meat = 0;
+	// if (data.meat != 0)
+	// {
+		if (pthread_mutex_init(&data.m_sync, NULL))
+		 	data.meat = 0;
+		else if (pthread_mutex_init(&data.m_dead, NULL))
+		{
+			 pthread_mutex_destroy(&data.m_sync);
+			 data.meat = 0;
+		}
+		else if (pthread_mutex_init(&data.m_EOeat, NULL))
+		{
+			pthread_mutex_destroy(&data.m_sync);
+			pthread_mutex_destroy(&data.m_dead);
+			data.meat = 0;
+		}
+	// }
 	return (data);
 }
 
@@ -46,15 +56,16 @@ t_philo *init_philo(t_data *data)
 
 	i = 0;
 	philo = malloc(data->nbphilo * sizeof (*philo));
-	if (philo == NULL)
-		return (NULL);
-	while (i < data->nbphilo)
+	while (i < data->nbphilo && philo)
 	{
 		philo[i].philo_id = i + 1;
 		philo[i].feat = 0;
 		philo[i].seat = 0;
 		if (pthread_mutex_init(&philo[i].mutex_fork, NULL))
+		{
+			free(philo);
 			return (NULL);
+		}
 		if (i != data->nbphilo - 1)
 			philo[i].mutex_fork2 = &philo[i + 1].mutex_fork;
 		else

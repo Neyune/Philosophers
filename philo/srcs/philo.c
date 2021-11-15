@@ -16,7 +16,6 @@ int	setdeath(t_data *data, t_philo **philo)
 {
 	int i;
 
-	i = 0;
 	while (data->dead == 0 && data->EOeat != data->nbphilo && data->meat != 0)
 	{
 		i = 0;
@@ -24,8 +23,8 @@ int	setdeath(t_data *data, t_philo **philo)
 		{
 			if ((ft_time() - (*philo)[i].data->stime) - (*philo)[i].feat >= data->die)
 			{
-				pthread_mutex_lock(&data->m_dead);
-				// a proteger
+				if (pthread_mutex_lock(&data->m_dead))
+					return (-1);
 				data->dead = 1;
 				pthread_mutex_unlock(&data->m_dead);
 				printf("%lld %d died\n", (ft_time() - data->stime), i + 1);
@@ -49,10 +48,8 @@ void    *Routine(t_philo *philo)
 	f1 = 0;
 	f2 = 0;
 	i = 0;
-	if (pthread_mutex_lock(&philo->data->m_sync))
-		return (NULL);
-	if (pthread_mutex_unlock(&philo->data->m_sync))
-		return (NULL);
+	pthread_mutex_lock(&philo->data->m_sync);
+	pthread_mutex_unlock(&philo->data->m_sync);
 	if (philo->philo_id % 2 == 1)
 		usleep(150);
 	while (philo->data->dead == 0 && philo->data->meat != 0 && philo->data->EOeat != philo->data->nbphilo)
@@ -106,13 +103,11 @@ void    *Routine(t_philo *philo)
 			ft_msleep(&philo->data,philo->data->sleep);
 		}
 		i++;
-
 	}
-	while (philo->data->dead == 0 && (philo->data->nbphilo == 1 && i >= 1))
-	{
+	while (philo->data->dead == 0
+		&& (philo->data->nbphilo == 1 && i >= 1))
 		usleep(150);
 		//safe car fixe
-	}
 	return (philo);
 }
 
@@ -123,8 +118,15 @@ int	philocreate(t_philo **philo)
 	i = 0;
 	while (i < (*philo)->data->nbphilo)
 	{
-		if (pthread_create(&(*philo)[i].philosophe, NULL, (t_routine)Routine, &(*philo)[i]) != 0)
-			return (-1);
+		if (pthread_create(&(*philo)[i].philosophe, NULL, (t_routine)Routine, &(*philo)[i]))
+		{
+			pthread_mutex_destroy(&(*philo)->data->m_dead);
+			pthread_mutex_destroy(&(*philo)->data->m_EOeat);
+			pthread_mutex_destroy(&(*philo)->data->m_dead);
+			pthread_mutex_destroy(&(*philo)[i].mutex_fork);
+			free(*philo);
+			return (1);
+		}
 		i++;
 	}
 	return (0);
@@ -135,7 +137,8 @@ int philojoin(t_philo **philo)
 	int i;
 
 	i = 0;
-	while (i < (*philo)->data->nbphilo && pthread_join((*philo)[i].philosophe, NULL) == 0)
+	while (i < (*philo)->data->nbphilo
+		&& pthread_join((*philo)[i].philosophe, NULL) == 0)
 		i++;
 	if(pthread_mutex_destroy(&(*philo)->data->m_sync))
 		return (-1);
@@ -153,19 +156,27 @@ int main(int argc, char **argv)
 
 	i = 0;
 	if (argc != 5 && argc != 6)
-		return (0);
+		return (1);
 	data = init_data(argv);
 	if (data.meat == 0 || data.nbphilo == 0)
-		return (0);
+		return (1);
 	philo = init_philo(&data);
 	if (philo == NULL)
-		return (-1);
+		return (1);
 	if (pthread_mutex_lock(&data.m_sync) || philocreate(&philo))
-		return(-2);
-	if (pthread_mutex_unlock(&data.m_sync))
-		return (-3);
+		return(2);
+	pthread_mutex_unlock(&data.m_sync);
 	if (setdeath(&data, &philo) || philojoin(&philo))
-		return(-4);
+	{
+		free(philo);
+		return(3);
+	}
 	free(philo);
 	return (0);
 }
+
+// fct () 			pthread_mutex_destroy(&(*philo)->data->m_dead);
+// 			pthread_mutex_destroy(&(*philo)->data->m_EOeat);
+// 			pthread_mutex_destroy(&(*philo)->data->m_dead);
+// 			pthread_mutex_destroy(&(*philo)[i].mutex_fork);
+// 			free(philo);

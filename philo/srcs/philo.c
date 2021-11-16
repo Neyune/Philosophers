@@ -118,7 +118,7 @@ void    *Routine(t_philo *philo)
 		}
 		i++;
 		while (philo->data->dead == 0
-			&& (philo->data->nbphilo == 1 && i >= 1))
+			&& (philo->data->nbphilo == 1 && i == 1))
 			usleep(150);
 	}
 	return (philo);

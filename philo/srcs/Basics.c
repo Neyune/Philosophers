@@ -6,7 +6,7 @@
 /*   By: ereali <ereali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 23:48:52 by ereali            #+#    #+#             */
-/*   Updated: 2021/10/19 00:26:11 by ereali           ###   ########.fr       */
+/*   Updated: 2021/11/16 06:59:47 by ereali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,15 +68,23 @@ void ft_msleep(t_data **data,long long msec)
 	timestamp = ft_time();
 	while ((*data)->dead == 0 && (*data)->EOeat != (*data)->nbphilo
 		&& ft_time() - timestamp < msec)
-		usleep(150);
+		usleep(1000);
 }
 
-void ft_clear(t_philo **philo)
+void ft_clear(t_philo **philo, int j)
 {
+	int i;
+
+	i = 0;
+	if (j == -1)
+		j = (*philo)->data->nbphilo;
 	pthread_mutex_destroy(&(*philo)->data->m_sync);
 	pthread_mutex_destroy(&(*philo)->data->m_EOeat);
 	pthread_mutex_destroy(&(*philo)->data->m_dead);
-	// while i ...
-	// pthread_mutex_destroy(&(*philo)[i].mutex_fork);
+	while (i < j)
+	{
+		pthread_mutex_destroy(&(*philo)[i].mutex_fork);
+		i++;
+	}
 	free(*philo);
 }

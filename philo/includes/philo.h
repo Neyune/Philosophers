@@ -53,7 +53,7 @@ long int    ft_atol(char *str);
 long long   ft_time(void);
 void        ft_msleep(t_data **data,long long msec);
 int         *check_arg(char **argv, int *args);
-void        ft_clear(t_philo **philo);
+void        ft_clear(t_philo **philo,int j);
 
 t_data      init_data(char **argv);
 t_philo     *init_philo(t_data *data);

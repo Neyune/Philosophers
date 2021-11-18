@@ -6,7 +6,7 @@
 #    By: ereali <ereali@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/18 05:33:00 by ereali            #+#    #+#              #
-#    Updated: 2021/11/16 07:08:48 by ereali           ###   ########.fr        #
+#    Updated: 2021/11/18 05:27:38 by ereali           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ vpath %.c $(foreach dir, $(SRC_DIR), $(dir):)
 vpath %.h $(foreach dir, $(INC_DIR), $(dir):)
 
 ##List every .c found inside SRC_DIR
-SRC = philo.c Basics.c initstruct.c Routine.c
+SRC = philo.c Basics.c initstruct.c Routine.c check.c
 
 ##List every .h found inside INC_DIR
 INC = philo.h

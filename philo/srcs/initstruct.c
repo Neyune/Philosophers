@@ -6,7 +6,7 @@
 /*   By: ereali <ereali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 04:29:30 by ereali            #+#    #+#             */
-/*   Updated: 2021/11/18 18:26:53 by ereali           ###   ########.fr       */
+/*   Updated: 2021/11/18 19:11:09 by ereali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,8 @@ t_data	init_data(char **argv)
 
 	if (check_arg(argv, (int *)&data) == NULL)
 	{
-		printf("Wrong args, you need to put 4 or 5 args (only unsigned int)\n");
+		write(2,"Wrong args, you need to put 4 or 5 args (only unsigned int)\n"
+		, 60);
 		data.meat = 0;
 	}
 	if (pthread_mutex_init(&data.m_sync, NULL))

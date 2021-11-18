@@ -6,7 +6,7 @@
 /*   By: ereali <ereali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 17:31:54 by ereali            #+#    #+#             */
-/*   Updated: 2021/11/18 18:26:24 by ereali           ###   ########.fr       */
+/*   Updated: 2021/11/18 21:24:53 by ereali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,15 @@ void	eat(t_philo **philo, int nb)
 	if (nb == 2)
 	{
 		usefeat(philo, 0, 0);
+		// pthread_mutex_lock(&(*philo)->data->m_dead);
+
 		ft_print(philo, "%lld %d has taken a fork\n");
 		ft_print(philo, "%lld %d is eating\n");
+		// pthread_mutex_unlock(&(*philo)->data->m_dead);
+
 		ft_msleep(philo, (*philo)->data->eat);
 		pthread_mutex_unlock(&(*philo)->mutex_fork);
+
 	}
 }
 

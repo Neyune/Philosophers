@@ -6,7 +6,7 @@
 #    By: ereali <ereali@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/18 05:33:00 by ereali            #+#    #+#              #
-#    Updated: 2021/11/18 17:44:31 by ereali           ###   ########.fr        #
+#    Updated: 2021/11/18 21:09:10 by ereali           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,8 +36,7 @@ INC = philo.h
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:%.c=%.o))
 
 ##Basics flags
-CFLAGS =	-Wall -Wextra -Werror -g3
-#-fsanitize=thread
+CFLAGS =	-Wall -Wextra -Werror -g3 -fsanitize=thread
 
 ##Create the flags to includes every .h needed by this program
 IFLAGS =	$(foreach dir, $(INC_DIR), -I $(dir))

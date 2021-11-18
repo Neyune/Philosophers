@@ -6,7 +6,7 @@
 /*   By: ereali <ereali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 05:32:46 by ereali            #+#    #+#             */
-/*   Updated: 2021/11/18 18:08:43 by ereali           ###   ########.fr       */
+/*   Updated: 2021/11/18 21:01:03 by ereali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,8 @@ int	main(int argc, char **argv)
 
 	if (argc != 5 && argc != 6)
 	{
-		printf("Wrong args, you need to put 4 or 5 args (only unsigned int)\n");
+		write(2,"Wrong args, you need to put 4 or 5 args (only unsigned int)\n"
+		, 60);
 		return (1);
 	}
 	data = init_data(argv);

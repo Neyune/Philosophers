@@ -6,7 +6,7 @@
 /*   By: ereali <ereali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 05:32:46 by ereali            #+#    #+#             */
-/*   Updated: 2021/11/18 06:49:23 by ereali           ###   ########.fr       */
+/*   Updated: 2021/11/18 18:08:43 by ereali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@ int	setdeath(t_data *data, t_philo **philo)
 		i = 0;
 		while (i < data->nbphilo && !check_death(philo) && !check_eoeat(philo))
 		{
-			if ((ft_time() - (*philo)[i].data->stime)
-				- (*philo)[i].feat >= data->die)
+			if (usefeat(philo, 1, i))
 			{
 				ft_print(philo, "%lld %d died\n");
 				if (pthread_mutex_lock(&data->m_dead))
@@ -66,64 +65,25 @@ int	philocreate(t_philo **philo)
 
 void	*routine(t_philo *philo)
 {
-	// tableau int pour avoir que f[2] test 2 90000 200 200 1
 	int	i;
-	int	f1;
 	int	f2;
 
-	f1 = 0;
-	f2 = 0;
 	i = 0;
 	pthread_mutex_lock(&philo->data->m_sync);
 	pthread_mutex_unlock(&philo->data->m_sync);
 	if (philo->philo_id % 2 == 1)
-	{
 		ft_msleep(&philo, 1);
-	}
 	while (!check_death(&philo) && philo->data->meat != 0
 		&& !check_eoeat(&philo))
 	{
-		if (!check_death(&philo) && !check_eoeat(&philo))
-			ft_print(&philo, "%lld %d is thinking\n");
-		if (!check_death(&philo) && !check_eoeat(&philo))
-		{
-			f1 = 1;
-			pthread_mutex_lock(philo->mutex_fork2);
-			if (philo->data->nbphilo != 1)
-				{
-					f2 = 1;
-					pthread_mutex_lock(&philo->mutex_fork);
-				}
-			if (!check_death(&philo) && !check_eoeat(&philo))
-				ft_print(&philo, "%lld %d has taken a fork\n");
-			// return (0); // fct prtege et destroy mutex
-		}
-		if (f1 && f2)
-		{
-			philo->feat = (ft_time() - philo->data->stime);
-		}
-		if (!check_death(&philo) && f1 && f2 && !check_eoeat(&philo))
-		{
-			ft_print(&philo, "%lld %d has taken a fork\n");
-			ft_print(&philo, "%lld %d is eating\n");
-			ft_msleep(&philo, philo->data->eat);
-		}  // return (0); // fct prtege et destroy mutex
-		if (f1)
+		ft_print(&philo, "%lld %d is thinking\n");
+		f2 = takefork(&philo);
+		eat(&philo, f2);
+		if (f2 > 0)
 			pthread_mutex_unlock(philo->mutex_fork2);
-		if (f2)
-			pthread_mutex_unlock(&philo->mutex_fork);
-		if (philo->data->meat > 0 && (i + 1) == philo->data->meat && f1 && f2)
-		{
-			pthread_mutex_lock(&philo->data->m_eoeat);
-			philo->data->eoeat += 1;
-			pthread_mutex_unlock(&philo->data->m_eoeat);
-		}
-		if (!check_death(&philo) && (f1 && f2)
-			&& !check_eoeat(&philo))
-		{
-			ft_print(&philo, "%lld %d is sleeping\n");
-			ft_msleep(&philo, philo->data->sleep);
-		}
+		if (philo->data->meat > 0 && (i + 1) == philo->data->meat && f2 == 2)
+			increeoeat(&philo);
+		ft_printsleep(&philo, f2);
 		i++;
 		while (!check_death(&philo) && (philo->data->nbphilo == 1 && i))
 			usleep(150);

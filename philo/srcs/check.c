@@ -6,18 +6,18 @@
 /*   By: ereali <ereali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 04:47:43 by ereali            #+#    #+#             */
-/*   Updated: 2021/11/18 06:51:54 by ereali           ###   ########.fr       */
+/*   Updated: 2021/11/18 18:27:48 by ereali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-//creer ft check feat 
+//creer ft check feat  assign compare
 
 int	check_death(t_philo **philo)
 {
 	pthread_mutex_lock(&(*philo)->data->m_dead);
-	if((*philo)->data->dead == 1)
+	if ((*philo)->data->dead == 1)
 	{
 		pthread_mutex_unlock(&(*philo)->data->m_dead);
 		return (1);
@@ -29,7 +29,7 @@ int	check_death(t_philo **philo)
 int	check_eoeat(t_philo **philo)
 {
 	pthread_mutex_lock(&(*philo)->data->m_eoeat);
-	if((*philo)->data->eoeat == (*philo)->data->nbphilo)
+	if ((*philo)->data->eoeat == (*philo)->data->nbphilo)
 	{
 		pthread_mutex_unlock(&(*philo)->data->m_eoeat);
 		return (1);
@@ -41,9 +41,39 @@ int	check_eoeat(t_philo **philo)
 void	ft_print(t_philo **philo, char *str)
 {
 	pthread_mutex_lock(&(*philo)->data->m_printf);
-	if(!check_death(philo) && !check_eoeat(philo))
+	if (!check_death(philo) && !check_eoeat(philo))
 	{
 		printf(str, ft_time() - (*philo)->data->stime, (*philo)->philo_id);
 	}
 	pthread_mutex_unlock(&(*philo)->data->m_printf);
+}
+
+int	usefeat(t_philo **philo, int i, int nb)
+{
+	(void)nb;
+	if (i == 0)
+	{
+		pthread_mutex_lock(&(*philo)->m_feat);
+		(*philo)->feat = (ft_time() - (*philo)->data->stime);
+		pthread_mutex_unlock(&(*philo)->m_feat);
+	}
+	if (i == 1)
+	{
+		pthread_mutex_lock(&(*philo)->m_feat);
+		if ((ft_time() - (*philo)->data->stime)
+			- (*philo)->feat >= (*philo)->data->die)
+		{
+			pthread_mutex_unlock(&(*philo)->m_feat);
+			return (1);
+		}
+		pthread_mutex_unlock(&(*philo)->m_feat);
+	}
+	return (0);
+}
+
+void	increeoeat(t_philo **philo)
+{
+	pthread_mutex_lock(&(*philo)->data->m_eoeat);
+	(*philo)->data->eoeat += 1;
+	pthread_mutex_unlock(&(*philo)->data->m_eoeat);
 }

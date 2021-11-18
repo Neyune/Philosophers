@@ -6,7 +6,7 @@
 /*   By: ereali <ereali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 04:29:30 by ereali            #+#    #+#             */
-/*   Updated: 2021/11/18 06:50:39 by ereali           ###   ########.fr       */
+/*   Updated: 2021/11/18 18:26:53 by ereali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ t_data	init_data(char **argv)
 	return (data);
 }
 
-int init_mutex(t_data *data)
+int	init_mutex(t_data *data)
 {
 	if (pthread_mutex_init(&data->m_dead, NULL))
 	{
@@ -65,6 +65,7 @@ int init_mutex(t_data *data)
 	}
 	return (0);
 }
+
 t_philo	*init_philo(t_data *data)
 {
 	int		i;

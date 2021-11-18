@@ -6,7 +6,7 @@
 /*   By: ereali <ereali@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 05:35:05 by ereali            #+#    #+#             */
-/*   Updated: 2021/11/18 06:45:35 by ereali           ###   ########.fr       */
+/*   Updated: 2021/11/18 18:08:30 by ereali           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,13 @@ int			check_death(t_philo **philo);
 int			check_eoeat(t_philo **philo);
 void		ft_print(t_philo **philo, char *str);
 void		ft_msleep(t_philo **philo, long long msec);
+int			usefeat(t_philo **philo, int i, int nb);
+
+int			takefork(t_philo **philo);
+void		eat(t_philo **philo, int nb);
+void		increeoeat(t_philo **philo);
+void		ft_printsleep(t_philo **philo, int nb);
+
 
 void		ft_clear(t_philo **philo, int j, int k);
 

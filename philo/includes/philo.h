@@ -30,7 +30,7 @@ typedef struct s_data
 	int				sleep;
 	int				meat;
 	long long		stime;
-	pthread_mutex_t	m_sync;
+	pthread_mutex_t	m_coor;
 	pthread_mutex_t	m_eoeat;
 	int				eoeat;
 	pthread_mutex_t	m_dead;
@@ -65,8 +65,8 @@ void		eat(t_philo **philo, int nb);
 void		increeoeat(t_philo **philo);
 void		ft_printsleep(t_philo **philo, int nb);
 
-
-void		ft_clear(t_philo **philo, int j, int k);
+int			philojoin(t_philo **philo, int limit);
+void		ft_clear(t_philo **philo, int j, int k, int l);
 
 t_data		init_data(char **argv);
 int			init_mutex(t_data *data);

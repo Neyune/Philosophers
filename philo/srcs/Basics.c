@@ -70,22 +70,25 @@ void	ft_msleep(t_philo **philo, long long msec)
 		usleep(1000);
 }
 
-void	ft_clear(t_philo **philo, int j, int k)
+void	ft_clear(t_philo **philo, int j, int k, int l)
 {
 	int	i;
 
 	i = 0;
 	if (j == -1)
 		j = (*philo)->data->nbphilo;
-	pthread_mutex_destroy(&(*philo)->data->m_sync);
-	pthread_mutex_destroy(&(*philo)->data->m_dead);
-	pthread_mutex_destroy(&(*philo)->data->m_eoeat);
-	pthread_mutex_destroy(&(*philo)->data->m_printf);
+	philojoin(philo, l);
+	// pthread_mutex_destroy(&(*philo)->data->m_coor);
+	// pthread_mutex_destroy(&(*philo)->data->m_dead);
+	// pthread_mutex_destroy(&(*philo)->data->m_eoeat);
+	// pthread_mutex_destroy(&(*philo)->data->m_printf);
+	i = 0;
 	while (i < k)
 	{
 		pthread_mutex_destroy(&(*philo)[i].m_feat);
 		i++;
 	}
+	i = 0;
 	while (i < j)
 	{
 		pthread_mutex_destroy(&(*philo)[i].mutex_fork);

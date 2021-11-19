@@ -39,31 +39,31 @@ t_data	init_data(char **argv)
 		, 60);
 		data.meat = 0;
 	}
-	if (pthread_mutex_init(&data.m_sync, NULL))
-		data.meat = 0;
 	return (data);
 }
 
 int	init_mutex(t_data *data)
 {
+	pthread_mutex_init(&data->m_coor, NULL);
 	if (pthread_mutex_init(&data->m_dead, NULL))
 	{
-		pthread_mutex_destroy(&data->m_sync);
+		pthread_mutex_destroy(&data->m_coor);
 		return (1);
 	}
 	else if (pthread_mutex_init(&data->m_eoeat, NULL))
 	{
-		pthread_mutex_destroy(&data->m_sync);
+		pthread_mutex_destroy(&data->m_coor);
 		pthread_mutex_destroy(&data->m_dead);
 		return (1);
 	}
 	else if (pthread_mutex_init(&data->m_printf, NULL))
 	{
-		pthread_mutex_destroy(&data->m_sync);
+		pthread_mutex_destroy(&data->m_coor);
 		pthread_mutex_destroy(&data->m_dead);
 		pthread_mutex_destroy(&data->m_eoeat);
 		return (1);
 	}
+
 	return (0);
 }
 
@@ -75,6 +75,7 @@ t_philo	*init_philo(t_data *data)
 	i = 0;
 	data->eoeat = 0;
 	philo = malloc(data->nbphilo * sizeof (*philo));
+	init_mutex(data);
 	while (i < data->nbphilo && philo)
 	{
 		philo[i].philo_id = i + 1;
@@ -82,7 +83,7 @@ t_philo	*init_philo(t_data *data)
 		philo[i].seat = 0;
 		if (pthread_mutex_init(&philo[i].mutex_fork, NULL))
 		{
-			ft_clear(&philo, i, 0);
+			ft_clear(&philo, i , 0, 0);
 			return (NULL);
 		}
 		if (i != data->nbphilo - 1)

@@ -78,10 +78,6 @@ void	ft_clear(t_philo **philo, int j, int k, int l)
 	if (j == -1)
 		j = (*philo)->data->nbphilo;
 	philojoin(philo, l);
-	// pthread_mutex_destroy(&(*philo)->data->m_coor);
-	// pthread_mutex_destroy(&(*philo)->data->m_dead);
-	// pthread_mutex_destroy(&(*philo)->data->m_eoeat);
-	// pthread_mutex_destroy(&(*philo)->data->m_printf);
 	i = 0;
 	while (i < k)
 	{
@@ -96,3 +92,8 @@ void	ft_clear(t_philo **philo, int j, int k, int l)
 	}
 	free(*philo);
 }
+
+// pthread_mutex_destroy(&(*philo)->data->m_coor);
+// pthread_mutex_destroy(&(*philo)->data->m_dead);
+// pthread_mutex_destroy(&(*philo)->data->m_eoeat);
+// pthread_mutex_destroy(&(*philo)->data->m_printf);

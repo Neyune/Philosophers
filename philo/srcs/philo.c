@@ -47,24 +47,17 @@ int	philocreate(t_philo **philo)
 	(*philo)->data->dead = 0;
 	while (i < (*philo)->data->nbphilo)
 	{
-
 		if (pthread_create(&(*philo)[i].philosophe, NULL, (t_routine)routine,
 			&(*philo)[i]))
 		{
-			pthread_mutex_lock(&(*philo)->data->m_eoeat);
-			(*philo)->data->eoeat = (*philo)->data->nbphilo;
-			pthread_mutex_unlock(&(*philo)->data->m_eoeat);
-			pthread_mutex_unlock(&(*philo)->data->m_coor);
+			protectphilocreate(philo);
 			ft_clear(philo, -1, i, i);
 			return (1);
 		}
 		if (pthread_mutex_init(&(*philo)[i].m_feat, NULL))
 		{
-			pthread_mutex_lock(&(*philo)->data->m_eoeat);
-			(*philo)->data->eoeat = (*philo)->data->nbphilo;
-			pthread_mutex_unlock(&(*philo)->data->m_eoeat);
-			pthread_mutex_unlock(&(*philo)->data->m_coor);
-			ft_clear(philo, -1 , i, i + 1);
+			protectphilocreate(philo);
+			ft_clear(philo, -1, i, i + 1);
 			return (1);
 		}
 		i++;
@@ -97,14 +90,13 @@ void	*routine(t_philo *philo)
 		while (!check_death(&philo) && (philo->data->nbphilo == 1 && i))
 			usleep(150);
 	}
-
 	return (philo);
 }
 
 int	philojoin(t_philo **philo, int limit)
 {
 	int	i;
-	int error;
+	int	error;
 
 	i = 0;
 	error = 0;
@@ -126,12 +118,12 @@ int	main(int argc, char **argv)
 
 	if (argc != 5 && argc != 6)
 	{
-		write(2,"Wrong args, you need to put 4 or 5 args (only unsigned int)\n"
-		, 60);
+		write(2, "Wrong arg, you need to put 4 or 5 args (only unsigned int)\n",
+			59);
 		return (1);
 	}
 	data = init_data(argv);
-	if (!data.meat || !data.nbphilo  || init_mutex(&data))
+	if (!data.meat || !data.nbphilo || init_mutex(&data))
 		return (1);
 	philo = init_philo(&data);
 	if (!philo || pthread_mutex_lock(&data.m_coor) || philocreate(&philo))

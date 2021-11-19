@@ -12,8 +12,6 @@
 
 #include "philo.h"
 
-//creer ft check feat  assign compare
-
 int	check_death(t_philo **philo)
 {
 	pthread_mutex_lock(&(*philo)->data->m_dead);

@@ -65,6 +65,7 @@ void		eat(t_philo **philo, int nb);
 void		increeoeat(t_philo **philo);
 void		ft_printsleep(t_philo **philo, int nb);
 
+void		protectphilocreate(t_philo **philo);
 int			philojoin(t_philo **philo, int limit);
 void		ft_clear(t_philo **philo, int j, int k, int l);
 

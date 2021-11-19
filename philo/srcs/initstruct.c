@@ -35,8 +35,8 @@ t_data	init_data(char **argv)
 
 	if (check_arg(argv, (int *)&data) == NULL)
 	{
-		write(2,"Wrong args, you need to put 4 or 5 args (only unsigned int)\n"
-		, 60);
+		write(2, "Wrong arg, you need to put 4 or 5 args (only unsigned int)\n",
+			59);
 		data.meat = 0;
 	}
 	return (data);
@@ -44,6 +44,7 @@ t_data	init_data(char **argv)
 
 int	init_mutex(t_data *data)
 {
+	(void) data;
 	pthread_mutex_init(&data->m_coor, NULL);
 	if (pthread_mutex_init(&data->m_dead, NULL))
 	{
@@ -63,8 +64,15 @@ int	init_mutex(t_data *data)
 		pthread_mutex_destroy(&data->m_eoeat);
 		return (1);
 	}
-
 	return (0);
+}
+
+void	protectphilocreate(t_philo **philo)
+{
+	pthread_mutex_lock(&(*philo)->data->m_eoeat);
+	(*philo)->data->eoeat = (*philo)->data->nbphilo;
+	pthread_mutex_unlock(&(*philo)->data->m_eoeat);
+	pthread_mutex_unlock(&(*philo)->data->m_coor);
 }
 
 t_philo	*init_philo(t_data *data)
@@ -75,7 +83,6 @@ t_philo	*init_philo(t_data *data)
 	i = 0;
 	data->eoeat = 0;
 	philo = malloc(data->nbphilo * sizeof (*philo));
-	init_mutex(data);
 	while (i < data->nbphilo && philo)
 	{
 		philo[i].philo_id = i + 1;
@@ -83,7 +90,7 @@ t_philo	*init_philo(t_data *data)
 		philo[i].seat = 0;
 		if (pthread_mutex_init(&philo[i].mutex_fork, NULL))
 		{
-			ft_clear(&philo, i , 0, 0);
+			ft_clear(&philo, i, 0, 0);
 			return (NULL);
 		}
 		if (i != data->nbphilo - 1)

@@ -35,7 +35,7 @@ t_data	init_data(char **argv)
 
 	if (check_arg(argv, (int *)&data) == NULL)
 	{
-		write(2, "Wrong arg, you need to put 4 or 5 args (only unsigned int)\n",
+		write(2, "Wrong arg, you need to put 4 or 5 args (only positive int)\n",
 			59);
 		data.meat = 0;
 	}

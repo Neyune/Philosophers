@@ -48,7 +48,6 @@ void	ft_print(t_philo **philo, char *str)
 
 int	usefeat(t_philo **philo, int i, int nb)
 {
-	(void)nb;
 	if (i == 0)
 	{
 		pthread_mutex_lock(&(*philo)->m_feat);
@@ -57,14 +56,14 @@ int	usefeat(t_philo **philo, int i, int nb)
 	}
 	if (i == 1)
 	{
-		pthread_mutex_lock(&(*philo)->m_feat);
+		pthread_mutex_lock(&(*philo)[nb].m_feat);
 		if ((ft_time() - (*philo)->data->stime)
-			- (*philo)->feat >= (*philo)->data->die)
+			- (*philo)[nb].feat >= (*philo)->data->die)
 		{
-			pthread_mutex_unlock(&(*philo)->m_feat);
+			pthread_mutex_unlock(&(*philo)[nb].m_feat);
 			return (1);
 		}
-		pthread_mutex_unlock(&(*philo)->m_feat);
+		pthread_mutex_unlock(&(*philo)[nb].m_feat);
 	}
 	return (0);
 }

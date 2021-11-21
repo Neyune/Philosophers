@@ -23,7 +23,10 @@ int	setdeath(t_data *data, t_philo **philo)
 		{
 			if (usefeat(philo, 1, i))
 			{
-				ft_print(philo, "%lld %d died\n");
+				pthread_mutex_lock(&(*philo)->data->m_printf);
+				printf("%lld %d died\n", ft_time()
+					- (*philo)->data->stime, (*philo)[i].philo_id);
+				pthread_mutex_unlock(&(*philo)->data->m_printf);
 				if (pthread_mutex_lock(&data->m_dead))
 					return (-1);
 				data->dead = 1;
@@ -118,7 +121,7 @@ int	main(int argc, char **argv)
 
 	if (argc != 5 && argc != 6)
 	{
-		write(2, "Wrong arg, you need to put 4 or 5 args (only unsigned int)\n",
+		write(2, "Wrong arg, you need to put 4 or 5 args (only positive int)\n",
 			59);
 		return (1);
 	}

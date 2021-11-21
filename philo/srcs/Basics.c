@@ -26,6 +26,8 @@ int	ft_atoi(char *str)
 		nb = nb * 10 + str[i] - '0';
 		i++;
 	}
+	if (str[i] != '\0')
+		return (-1);
 	return (nb);
 }
 
@@ -43,6 +45,8 @@ long int	ft_atol(char *str)
 		nb = nb * 10 + str[i] - '0';
 		i++;
 	}
+	if (str[i] != '\0' || i > 10)
+		return (-1);
 	return (nb);
 }
 
@@ -92,8 +96,3 @@ void	ft_clear(t_philo **philo, int j, int k, int l)
 	}
 	free(*philo);
 }
-
-// pthread_mutex_destroy(&(*philo)->data->m_coor);
-// pthread_mutex_destroy(&(*philo)->data->m_dead);
-// pthread_mutex_destroy(&(*philo)->data->m_eoeat);
-// pthread_mutex_destroy(&(*philo)->data->m_printf);

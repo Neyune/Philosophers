@@ -85,7 +85,7 @@ void	*routine(t_philo *philo)
 		f2 = takefork(&philo);
 		eat(&philo, f2);
 		if (f2 > 0)
-			pthread_mutex_unlock(&(philo)->mutex_fork);
+			pthread_mutex_unlock((philo)->mutex_fork2);
 		if (philo->data->meat > 0 && (i + 1) == philo->data->meat && f2 == 2)
 			increeoeat(&philo);
 		ft_printsleep(&philo, f2);

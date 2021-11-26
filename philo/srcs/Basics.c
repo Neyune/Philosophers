@@ -71,7 +71,7 @@ void	ft_msleep(t_philo **philo, long long msec)
 	timestamp = ft_time();
 	while (!check_death(philo) && !check_eoeat(philo)
 		&& ft_time() - timestamp < msec)
-		usleep(1000);
+		usleep(150);
 }
 
 void	ft_clear(t_philo **philo, int j, int k, int l)

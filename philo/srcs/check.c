@@ -39,7 +39,7 @@ int	check_eoeat(t_philo **philo)
 void	ft_print(t_philo **philo, char *str)
 {
 	pthread_mutex_lock(&(*philo)->data->m_printf);
-	if (!check_death(philo) && !check_eoeat(philo))
+	if (!check_eoeat(philo) && !check_death(philo))
 	{
 		printf(str, ft_time() - (*philo)->data->stime, (*philo)->philo_id);
 	}

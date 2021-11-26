@@ -19,21 +19,21 @@ int	takefork(t_philo **philo)
 	f2 = 0;
 	if (!check_death(philo) && !check_eoeat(philo))
 	{
-		if ((*philo)->philo_id != 1)
-		{
+		// if ((*philo)->philo_id != 1)
+		// {
 			pthread_mutex_lock(&(*philo)->mutex_fork);
 			f2 += 1;
-		}
+		// }
 		if ((*philo)->data->nbphilo != 1)
 		{
 			pthread_mutex_lock((*philo)->mutex_fork2);
 			f2 += 1;
 		}
-		if ((*philo)->philo_id == 1)
-		{
-			pthread_mutex_lock(&(*philo)->mutex_fork);
-			f2 += 1;
-		}
+		// if ((*philo)->philo_id == 1)
+		// {
+			// pthread_mutex_lock(&(*philo)->mutex_fork);
+			// f2 += 1;
+		// }
 		ft_print(philo, "%lld %d has taken a fork\n");
 	}
 	return (f2);
